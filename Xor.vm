@@ -1,0 +1,22 @@
+// Xor.vm
+// Computes z = x XOR y, where x=argument[0], y=argument[1].
+// Leaves the result z in argument[2] and also at the top of the stack.
+// argument[0] and argument[1] remain unmodified.
+
+push argument 0    // Stack: [x]
+push argument 1    // Stack: [x, y]
+or                 // Stack: [x OR y]
+
+push argument 0    // Stack: [x OR y, x]
+push argument 1    // Stack: [x OR y, x, y]
+and                // Stack: [x OR y, x AND y]
+not                // Stack: [x OR y, NOT(x AND y)]
+and                // Stack: [(x OR y) AND NOT(x AND y)] = x XOR y
+
+pop argument 2     // Store result z in argument[2], stack is now empty
+push argument 2    // Push result back so it's on top of stack
+                   // Final stack: [x XOR y]
+
+
+
+
