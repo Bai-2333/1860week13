@@ -1,0 +1,95 @@
+// Square.vm
+// Computes y = x^2, where x = argument[0] and x’s initial value must not be modified.
+// The final result y is pushed onto the top of the stack, with no other values left on it.
+
+//---------------------------------------------------------
+// 1) Read x into temp 0 (so we can modify it freely later
+//    without changing argument[0])
+//---------------------------------------------------------
+push argument 0
+pop temp 0          // temp 0 <- x
+
+//---------------------------------------------------------
+// 2) If x < 0, set temp 0 = -x (take the absolute value) 
+//---------------------------------------------------------
+push temp 0
+push constant 0
+lt                  // Compare x < 0 ?
+if-goto NEGATIVE_X
+goto NON_NEGATIVE_X
+
+(NEGATIVE_X)
+  push temp 0
+  neg
+  pop temp 0        // temp 0 <- -x
+  goto AFTER_ABS
+
+(NON_NEGATIVE_X)
+(AFTER_ABS)
+// Now temp 0 = |x|
+
+//---------------------------------------------------------
+// 3) Use “repeated addition” to compute (|x|) * (|x|) = x^2
+//    - temp 1 is the loop counter, initialized to |x|
+//    - temp 2 is the running sum, initialized to 0
+//---------------------------------------------------------
+push temp 0
+pop temp 1          // temp 1 <- |x| (loop count)
+push constant 0
+pop temp 2          // temp 2 <- 0 (accumulator)
+
+// Start of the loop
+(LOOP_START)
+  // If the loop counter is 0, exit the loop
+  push temp 1
+  push constant 0
+  eq  
+  if-goto LOOP_END
+
+  // sum += |x|
+  push temp 2
+  push temp 0
+  add
+  pop temp 2
+
+  // count--
+  push temp 1
+  push constant 1
+  sub
+  pop temp 1
+
+  goto LOOP_START
+
+(LOOP_END)
+// Now temp 2 holds x^2
+
+//---------------------------------------------------------
+// 4) Push the result onto the stack and end
+//    The stack will then contain only x^2
+//---------------------------------------------------------
+push temp 2
+// At the end, the stack’s sole value is x^2 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
