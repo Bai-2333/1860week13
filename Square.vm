@@ -1,76 +1,48 @@
-// Square.vm
-// Computes y = x^2, where x = argument[0] and x’s initial value must not be modified.
-// The final result y is pushed onto the top of the stack, with no other values left on it.
-
-//---------------------------------------------------------
-// 1) Read x into temp 0 (so we can modify it freely later
-//    without changing argument[0])
-//---------------------------------------------------------
 push argument 0
-pop temp 0          // temp 0 <- x
+pop temp 0
 
-//---------------------------------------------------------
-// 2) If x < 0, set temp 0 = -x (take the absolute value) 
-//---------------------------------------------------------
+push constant 0
+pop temp 1
+
 push temp 0
 push constant 0
-lt                  // Compare x < 0 ?
-if-goto NEGATIVEX
-goto NONNEGATIVEX
+lt
+if-goto MAKE_POS
+goto SKIP_NEG
 
-(NEGATIVEX)
+label MAKE_POS
   push temp 0
   neg
-  pop temp 0        // temp 0 <- -x
-  goto AFTERABS
+  pop temp 0
+  goto CONT
 
-(NONNEGATIVEX)
-(AFTERABS)
-// Now temp 0 = |x|
+label SKIP_NEG
 
-//---------------------------------------------------------
-// 3) Use “repeated addition” to compute (|x|) * (|x|) = x^2
-//    - temp 1 is the loop counter, initialized to |x|
-//    - temp 2 is the running sum, initialized to 0
-//---------------------------------------------------------
+label CONT
+
 push temp 0
-pop temp 1          // temp 1 <- |x| (loop count)
-push constant 0
-pop temp 2          // temp 2 <- 0 (accumulator)
+pop temp 2
 
-// Start of the loop
-(LOOP_START)
-  // If the loop counter is 0, exit the loop
-  push temp 1
-  push constant 0
-  eq  
-  if-goto LOOPEND
-
-  // sum += |x|
+label LOOP
   push temp 2
+  push constant 0
+  eq
+  if-goto DONE
+
+  push temp 1
   push temp 0
   add
-  pop temp 2
-
-  // count--
-  push temp 1
-  push constant 1
-  sub
   pop temp 1
 
-  goto LOOPSTART
+  push temp 2
+  push constant 1
+  sub
+  pop temp 2
 
-(LOOPEND)
-// Now temp 2 holds x^2
+  goto LOOP
 
-//---------------------------------------------------------
-// 4) Push the result onto the stack and end
-//    The stack will then contain only x^2
-//---------------------------------------------------------
-push temp 2
-// At the end, the stack’s sole value is x^2 
-
-
+label DONE
+push temp 1
 
 
 
