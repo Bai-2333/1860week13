@@ -8,22 +8,22 @@
 push constant 0
 pop argument 3
 
-// --- Check if x might be -32768 or 0 ---
-// In 16-bit two’s complement, if 2*x == 0, then x might be 0 or -32768
+// Check if x might be -32768 or 0
+// In 16-bit two's complement, if 2*x == 0, then x might be 0 or -32768
 push argument 0
 push argument 0
 add               // Compute 2*x
 push constant 0
 eq                // Is 2*x == 0 ? 
-if-goto CHECK_X_IS_ZERO
-goto CHECK_SIGN   // Otherwise, proceed with normal sign check
+if-goto CHECKXISZERO
+goto CHECKSIGN    // Otherwise, proceed with normal sign check
 
-(CHECK_X_IS_ZERO)
+(CHECKXISZERO)
 // If 2*x == 0, x could be 0 or -32768; distinguish these two cases
 push argument 0
 push constant 0
 eq                // Is x == 0 ?
-if-goto X_IS_ZERO
+if-goto XISZERO
 
 // If not 0, then x must be -32768
 // Set argument[3] = 1 (cannot compute absolute value)
@@ -36,7 +36,7 @@ push constant 1
 pop argument 2
 goto END
 
-(X_IS_ZERO)
+(XISZERO)
 // If x == 0, then its absolute value is 0
 push constant 0
 pop argument 1     // z = 0
@@ -44,14 +44,14 @@ push constant 0
 pop argument 2     // x >= 0, so argument[2] = 0
 goto END
 
-// --- Check x’s sign ---
-(CHECK_SIGN)
+// Check x's sign
+(CHECKSIGN)
 push argument 0
 push constant 0
 lt                 // Is x < 0 ?
-if-goto X_NEGATIVE
+if-goto XNEGATIVE
 
-(X_NOT_NEGATIVE)
+(XNOTNEGATIVE)
 // If x >= 0, absolute value is x
 push argument 0
 pop argument 1     // z = x
@@ -59,7 +59,7 @@ push constant 0
 pop argument 2     // x is not negative, so argument[2] = 0
 goto END
 
-(X_NEGATIVE)
+(XNEGATIVE)
 // If x < 0, absolute value is -x
 push argument 0
 neg
@@ -70,7 +70,6 @@ goto END
 
 (END)
 // End of program
-
 
 
 
