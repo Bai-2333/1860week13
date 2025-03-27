@@ -15,17 +15,17 @@ pop temp 0          // temp 0 <- x
 push temp 0
 push constant 0
 lt                  // Compare x < 0 ?
-if-goto NEGATIVE_X
-goto NON_NEGATIVE_X
+if-goto NEGATIVEX
+goto NONNEGATIVEX
 
-(NEGATIVE_X)
+(NEGATIVEX)
   push temp 0
   neg
   pop temp 0        // temp 0 <- -x
-  goto AFTER_ABS
+  goto AFTERABS
 
-(NON_NEGATIVE_X)
-(AFTER_ABS)
+(NONNEGATIVEX)
+(AFTERABS)
 // Now temp 0 = |x|
 
 //---------------------------------------------------------
@@ -44,7 +44,7 @@ pop temp 2          // temp 2 <- 0 (accumulator)
   push temp 1
   push constant 0
   eq  
-  if-goto LOOP_END
+  if-goto LOOPEND
 
   // sum += |x|
   push temp 2
@@ -58,9 +58,9 @@ pop temp 2          // temp 2 <- 0 (accumulator)
   sub
   pop temp 1
 
-  goto LOOP_START
+  goto LOOPSTART
 
-(LOOP_END)
+(LOOPEND)
 // Now temp 2 holds x^2
 
 //---------------------------------------------------------
